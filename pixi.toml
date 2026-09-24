@@ -1,0 +1,87 @@
+[workspace]
+name = "wt_imu"
+channels = ["robostack-jazzy", "conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = ">=3.12,<3.13"
+ros-jazzy-ros-base = ">=0.11.0,<0.12"
+ros-jazzy-desktop = ">=0.11.0,<0.12"
+ros-jazzy-ament-cmake = ">=2.5.6,<3"
+ros-jazzy-rclcpp = ">=28.1.18,<29"
+ros-jazzy-sensor-msgs = ">=5.3.7,<6"
+ros-jazzy-geometry-msgs = ">=5.3.7,<6"
+ros-jazzy-std-msgs = ">=5.3.7,<6"
+ros-jazzy-rviz-imu-plugin = ">=2.1.5,<3"
+ros-jazzy-ament-lint-auto = ">=0.17.5,<1"
+ros-jazzy-ament-lint-common = ">=0.17.5,<1"
+colcon-common-extensions = ">=0.3.0,<0.4"
+cmake = ">=4.4.0,<5"
+ninja = ">=1.13.2,<2"
+cxx-compiler = ">=2.0.0,<3"
+pkg-config = ">=0.29.2,<0.30"
+xorg-libx11 = ">=1.8.13,<2"
+clang-format = ">=22.1.8,<24"
+gtest = ">=1.17.0,<2"
+
+[tasks]
+build = {
+  cmd = "colcon build --symlink-install --base-paths . --packages-select wt_imu",
+  env = {
+    AMENT_PREFIX_PATH = "$CONDA_PREFIX",
+    CMAKE_PREFIX_PATH = "$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+test = {
+  cmd = "ctest --test-dir build/wt_imu --output-on-failure -L gtest",
+  depends-on = ["build"],
+  env = {
+    AMENT_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    CMAKE_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+lint = {
+  cmd = "ctest --test-dir build/wt_imu --output-on-failure -L linter",
+  depends-on = ["build"],
+  env = {
+    AMENT_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    CMAKE_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+format = "find include src test -type f \\( -name '*.cpp' -o -name '*.hpp' \\) -print0 | xargs -0 clang-format -i"
+format-check = "find include src test -type f \\( -name '*.cpp' -o -name '*.hpp' \\) -print0 | xargs -0 clang-format --dry-run --Werror"
+clean = "rm -rf build install log"
+launch = {
+  cmd = "ros2 launch ./launch/wt_imu.launch.xml",
+  depends-on = ["build"],
+  env = {
+    AMENT_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    CMAKE_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+rqt = {
+  cmd = "rqt",
+  env = {
+    AMENT_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+rviz = {
+  cmd = "rviz2",
+  env = {
+    AMENT_PREFIX_PATH = "$PWD/install/wt_imu:$CONDA_PREFIX",
+    LD_LIBRARY_PATH = "$CONDA_PREFIX/lib",
+    RMW_IMPLEMENTATION = "rmw_fastrtps_cpp",
+  },
+}
+check = [{ task = "test" }, { task = "lint" }, { task = "format-check" }]

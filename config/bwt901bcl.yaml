@@ -1,0 +1,53 @@
+/**:
+  ros__parameters:
+    device: "/dev/witmotion"
+    baud_rate: 115200
+    frame_id: "imu"
+    auto_reconnect: true
+    reconnect_interval_sec: 1.0
+    sync_sensor_time: true
+    configure_sensor: true
+    settings:
+      # 6 = 10 Hz, 7 = 20 Hz, 8 = 50 Hz, 9 = 100 Hz
+      output_rate: 6
+      # 0x7ff = TIME + ACC + GYRO + ANGLE + MAG + PORT + PRESS + GPS + VELOCITY + QUATERNION + GSA
+      content: 2047
+      save: true
+    imu:
+      enable: true
+      topic: "imu"
+      frame_id: "imu"
+    magnetometer:
+      enable: true
+      topic: "magnetometer"
+      frame_id: "imu"
+      # MAGSENSOR=3: 0.013 uT/LSB
+      scale_tesla_per_lsb: 0.000000013
+    temperature:
+      enable: true
+      topic: "temperature"
+      frame_id: "imu"
+    pressure:
+      enable: false
+      topic: "pressure"
+      frame_id: "imu"
+    altitude:
+      enable: true
+      topic: "altitude"
+      frame_id: "imu"
+    quaternion:
+      enable: true
+      topic: "quaternion"
+      frame_id: "imu"
+    gps:
+      enable: false
+      topic: "gps"
+      frame_id: "imu"
+    velocity:
+      enable: false
+      topic: "velocity"
+      frame_id: "imu"
+    digital_port:
+      enable: true
+      topic: "digital_port"
+      frame_id: "imu"

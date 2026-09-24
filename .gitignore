@@ -1,0 +1,8 @@
+build/
+install/
+log/
+.pixi/
+.direnv/
+compile_commands.json
+*.swp
+*~
