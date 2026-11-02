@@ -95,10 +95,16 @@ void TopicPublishers::publish_imu(const Sample &sample, const rclcpp::Time &stam
     message.orientation.x = (*sample.quaternion)[1];
     message.orientation.y = (*sample.quaternion)[2];
     message.orientation.z = (*sample.quaternion)[3];
-    message.orientation_covariance[0] = 0.0;
   } else if (sample.angles) {
     message.orientation = quaternion_from_angles(*sample.angles);
-    message.orientation_covariance[0] = 0.0;
+  }
+  if (sample.quaternion || sample.angles) {
+    constexpr auto degrees_to_radians = 3.14159265358979323846 / 180.0;
+    const auto tilt_variance = std::pow(0.2 * degrees_to_radians, 2);
+    const auto heading_variance = std::pow(1.0 * degrees_to_radians, 2);
+    message.orientation_covariance[0] = tilt_variance;
+    message.orientation_covariance[4] = tilt_variance;
+    message.orientation_covariance[8] = heading_variance;
   }
   imu_pub_->publish(message);
 }
