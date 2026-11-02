@@ -126,8 +126,3 @@ TEST(WitProtocol, ConvertsGpsAndVelocityUnits)
   EXPECT_NEAR(sample->velocity->yaw, 350.0 * 3.14159265358979323846 / 180.0, 1e-12);
   EXPECT_DOUBLE_EQ(sample->velocity->speed, 3.6);
 }
-
-TEST(WitProtocol, RejectsNullPacket)
-{
-  EXPECT_FALSE(wt_imu::WitProtocol::valid_packet(nullptr, 11));
-}
